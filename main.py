@@ -26,13 +26,24 @@ class Solution(object):
                 self.weight[tuple([a,b])] = c
         return self.g
     def gene_graph_dense(self):
-        
+        for a in range(5000):
+            wait = list(range(a)) + list(range(a+1,5000))
+            picked = random.sample(wait,  int(0.2*5000))
+            for b in picked:
+                print(a==b)
+
+                self.g.add(tuple([a,b]))
+                self.counter[a] += 1
+                self.counter[b] += 1
+                self.weight[tuple([a,b])] = random.uniform(1,10)
+        return self.g
     def save(self):
         dill.dump_session('15000.pkl')
 if __name__ == '__main__':
-    # a = Solution()
-    dill.load_session('15000.pkl')
-    b = a.gene_graph_sparse()
+    a = Solution()
+    # dill.load_session('15000.pkl')
+    # b = a.gene_graph_sparse()
+    b = a.gene_graph_dense()
     G = nx.Graph()
 
     # for e in b:
