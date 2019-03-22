@@ -144,12 +144,16 @@ class max_heap(object):
 
 if __name__ == '__main__':
     # test = [6,2,3,45,75,12,26,13,24,1,4,2,4,9,1,2,4,6,1,2,2,16,11,4,23,47,8,745,741,3]
-    test = random.sample(list(range(400)),30)
+    test1 = random.sample(list(range(400)),30)
+    test2 = random.sample(list(range(400)),30)
+    test = []
+    for i in range(30):
+        test.append(tuple([test1[i],test2[i]]))
 
 
 
     # test for delete
-    print(test)
+    # print(test)
     # a = min_heap(test)
     a = max_heap(test)
 
@@ -160,17 +164,21 @@ if __name__ == '__main__':
         a.check(0)
 
     # test for push and pop
-    # a = min_heap()
-    a = max_heap()
-    test = random.sample(list(range(400)),50)
+    a = min_heap()
+    # a = max_heap()
+    test1 = random.sample(list(range(400)),30)
+    test2 = random.sample(list(range(400)),30)
+    test = []
+    for i in range(30):
+        test.append(tuple([test1[i],test2[i]]))
 
     for i in test:
         a.heappush(i)
     poplist = []
     while a.ar:
         poplist.append(a.heappop())
-    # print(poplist,'\n',sorted(test))
-    print(poplist,'\n',sorted(test,reverse=True))
+    print(poplist,'\n',sorted(test))
+    # print(poplist,'\n',sorted(test,reverse=True))
 
 
 
