@@ -4,7 +4,8 @@ import random
 import collections
 import dill
 import heap
-# __counter__ = 1
+__counter__ = 1
+__pair__ = 1
 class Solution(object):
     def __init__(self,x):
         self.counter = collections.defaultdict(int)
@@ -37,7 +38,6 @@ class Solution(object):
             wait = list(range(a)) + list(range(a+1,self.size))
             picked = random.sample(wait,  int(0.2*self.size))
             for b in picked:
-                # print(a==b)
                 self.graph[a].add(b)
                 self.graph[b].add(a)
                 self.g.add(tuple([a,b]))
@@ -48,34 +48,24 @@ class Solution(object):
     def save(self):
         dill.dump_session('15000.pkl')
     def mbp_heap(self,s,t):
-        # print(self.graph)
         def track_back(t):
             path = [t]
             mbpv = bw[t]
-            # mbp_value = 0
             while t!= parent[t]:
                 path.append(parent[t])
-
                 t = parent[t]
             return path,mbpv
         status = [0 for i in range(self.size)]
-        # bw = collections.defaultdict(int)
         bw = [0 for i in range(self.size)]
-        # unvisit.remove(s)
         bw[s] = float('inf')
         status[s] = 2
         fringe = set()
         parent = list(range(self.size))
-        # intree.add(tuple[0,s])
         h = heap.max_heap()
-        print(self.graph[s])
         for j in self.graph[s]:
             fringe.add(j)
-            print(j)
             status[j] = 1
             parent[j] = s
-            # print(j)
-            # print(self.graph[s],s,j,len(bw))
             bw[j] = self.weight[(s,j)]     
             h.heappush(tuple([bw[j],j]))
         while fringe:
@@ -84,70 +74,76 @@ class Solution(object):
             status[maxfringe] = 2
             for nei in self.graph[maxfringe]:
                 if status[nei]==0:
+                    print('unseen')
                     bw[nei] = min(bw[maxfringe],self.weight[(maxfringe,nei)])
                     fringe.add(nei)
-                    h.heappush((bw[nei],nei))
+                    h.heappush(tuple([bw[nei],nei]))
                     status[nei] = 1
                     parent[nei] = maxfringe
                 elif status[nei]==1 and bw[nei]<min(bw[maxfringe],self.weight[(maxfringe,nei)]):
+                    print('fringe')
                     parent[nei] = maxfringe
                     bw[nei] = min(bw[maxfringe],self.weight[(maxfringe,nei)])
+                    h.delete(nei)
+                    h.heappush(tuple([bw[nei],nei]))
                     fringe.add(nei)
-                    status[nei] = 1
         return track_back(t)
+    def cruscal(self,s,t):
+        parent = [i for i in self.graph]
+        def root(v):
+            while v!=parent[v]:
+                v = parent[v]
+            return v
+        sorted_edges = sorted(self.weight,key=lambda x:self.weight[x])
 if __name__ == '__main__':
-    for __counter__ in range(10):
-        a = Solution(20)
-        # dill.load_session('15000.pkl')
 
 
+    # gene picture for heap_mbp
 
-        # test for mbp_heap
-        b = a.gene_graph_dense()
-        G1 = nx.Graph()
-        G2 = nx.Graph()
-        G3 = nx.Graph()
+    # for __counter__ in range(3):
+    a = Solution(30)
+    b = a.gene_graph_dense()
+    G1 = nx.Graph()
+    for e in a.g:
+        G1.add_edge(e[0],e[1],weight=a.weight[tuple(e)])
+    edges = G1.edges()
+    pos = nx.spring_layout(G1)
+    weights = [G1[u][v]['weight']/5 for u,v in edges]
 
-        for e in a.g:
-            G1.add_edge(e[0],e[1],weight=a.weight[tuple(e)])
-        mbp,v = a.mbp_heap(min(a.graph.keys()),max(a.graph.keys()))
-        print(mbp,v)
-        mbp_edges = []
-        for i in range(len(mbp)-1):
-            mbp_edges.append([mbp[i],mbp[i+1]])
-        for e in mbp_edges:
-            G2.add_edge(e[0],e[1],weight=a.weight[tuple(e)])
+    # mbp,v = a.mbp_heap(min(a.graph.keys()),max(a.graph.keys()))
+    # for __pair__ in range(5):
+    start,end = random.sample(a.graph.keys(),2)
+    mbp,v = a.mbp_heap(start,end)
+    print(mbp,v)
+    mbp_edges = []
+    for i in range(len(mbp)-1):
+        mbp_edges.append([mbp[i],mbp[i+1]])
+    G2 = nx.Graph()
+    for e in mbp_edges:
+        G2.add_edge(e[0],e[1],weight=a.weight[tuple(e)])
+    edges2 = G2.edges()
+    G3 = nx.Graph()
+    G3.add_node(start)
+    G3.add_node(end)
+    # pos2 = nx.spring_layout(G2)
+     # edge_color=weights,
+    nx.draw(G1,pos, node_color = 'g',node_size = 5,edges=edges, edge_color=weights, width=weights,edge_cmap=plt.cm.Blues)
+    nx.draw(G3,pos, node_color = 'r',node_size = 10)
+    plt.savefig('mbp_total' + str(__counter__) +'#' + str(__pair__) + '.png')
+    # plt.show()
+    # plt.close()
+    # nx.draw(G1,pos, node_color = 'g',node_size = 5,edges=edges, edge_color=weights, width=weights,edge_cmap=plt.cm.Blues)
+    nx.draw(G2,pos, node_color = 'r',node_size = 5,edges=edges2, edge_color='r', width=3.0)
+    # nx.draw(G3,pos, node_color = 'r',node_size = 10)
+    plt.savefig('mbp_path' + str(__counter__) +'#' + str(__pair__) + '.png')
+    plt.clf()
+    # plt.show()
+    # plt.close()
 
-
-
-        edges = G1.edges()
-        pos = nx.spring_layout(G1)
-        weights = [G1[u][v]['weight'] for u,v in edges]
-        edges2 = G2.edges()
-
-
-        G3.add_node(min(a.graph.keys()))
-        G3.add_node(max(a.graph.keys()))
-        # pos2 = nx.spring_layout(G2)
-         # edge_color=weights,
-        nx.draw(G1,pos, node_color = 'g',node_size = 5,edges=edges, edge_color=weights, width=weights,edge_cmap=plt.cm.Blues)
-        nx.draw(G3,pos, node_color = 'r',node_size = 10)
-
-        plt.savefig('total' + str(__counter__) + '.png')
-        plt.show()
-        plt.close()
-        nx.draw(G1,pos, node_color = 'g',node_size = 5,edges=edges, edge_color=weights, width=weights,edge_cmap=plt.cm.Blues)
-        nx.draw(G2,pos, node_color = 'r',node_size = 5,edges=edges2, edge_color='r', width=3.0)
-        nx.draw(G3,pos, node_color = 'r',node_size = 10)
-        plt.savefig('mbp_path' + str(__counter__) + '.png')
-        plt.show()
-        plt.close()
-
-    # print(mbp,v)
 
 
     # generate plot for points counter sparse
-
+    # a = Solution(5000)
     # b = a.gene_graph_sparse()
     # for e in b:
     #     G.add_weighted_edges_from([(e[0],e[1],a.weight[e])])
@@ -159,7 +155,7 @@ if __name__ == '__main__':
 
 
     # generate plot for points counter dense
-
+    # a = Solution(5000)
     # edge_counter = [0 for i in range(max(a.counter.values())+1)]
     # for v in a.counter.values():
     #     edge_counter[v] += 1
