@@ -165,27 +165,51 @@ class max_heap(object):
 
 
 if __name__ == '__main__':
-    test1 = random.sample(list(range(400)),10)
-    test2 = random.sample(list(range(20)),10)
-    test = []
-    pp = max_heap()
-    for i in range(10):
-        test.append(tuple([test1[i],test2[i]]))
-        pp.heappush(tuple([test1[i],test2[i]]))
-    lt = list(test)
-    max_h =max_heap(lt)
-    pp.check(0)
-    # print([a.D[i][0] for i in a.ar])
-    poplist2 = []
-    pplist = []
-    while max_h.ar:
-        poplist2.append(max_h.heappop()[0])
-    while pp.ar:
-        pplist.append(pp.heappop()[0])
-    # pp.delete(test2[-1])
-    print(poplist2,max_h.tracker,max_h.D,max_h.ar)
-    print(lt,pplist,pp.tracker,[pp.D[i][1] for i in pp.ar],[pp.D[i][0] for i in pp.ar])
+    # general test for push pop and heapfy
 
+    # test1 = random.sample(list(range(400)),10)
+    # test2 = random.sample(list(range(20)),10)
+    # test = []
+    # pp = max_heap()
+    # for i in range(10):
+    #     test.append(tuple([test1[i],test2[i]]))
+    #     pp.heappush(tuple([test1[i],test2[i]]))
+    # lt = list(test)
+    # max_h =max_heap(lt)
+    # pp.check(0)
+    # # print([a.D[i][0] for i in a.ar])
+    # poplist2 = []
+    # pplist = []
+    # while max_h.ar:
+    #     poplist2.append(max_h.heappop()[0])
+    # while pp.ar:
+    #     pplist.append(pp.heappop()[0])
+    # # pp.delete(test2[-1])
+    # print(poplist2,max_h.tracker,max_h.D,max_h.ar)
+    # print(lt,pplist,pp.tracker,[pp.D[i][1] for i in pp.ar],[pp.D[i][0] for i in pp.ar])
+
+    # 100 times for length(1000) heap
+    # for _ in range(20):
+
+    for j in range(10):
+        test1 = random.sample(list(range(4000)),10)
+        test2 = random.sample(list(range(2000)),10)
+        test = sorted(list(zip(test1,test2)),reverse=True)
+        if j%2:
+            pp = max_heap()
+            for i in range(10):
+                pp.heappush(tuple([test1[i],test2[i]]))
+        else:
+            pp = []
+            pp = max_heap(list(zip(test1,test2)))
+        pplist = []
+        while pp.ar:
+            pplist.append(pp.heappop())
+        # print(pplist,'\n',sorted(list(zip(test1,test2)),reverse= True))
+        for k in range(10):
+            # if pplist[j]!=test[j]:
+            print(pplist[k],test[k])
+        # print()
 
 
 
