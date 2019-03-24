@@ -90,8 +90,30 @@ class MBP(object):
             #     break
 
         return track(t),bw[root(t)]
+    def Mid(self,nums,target):
+        # def partition_median(nums):
+        p = random.sample(list(range(len(nums))),1)[0]
+        val = nums[p]
+        nums[p],nums[-1]=nums[-1],nums[p]
+        i = -1
+        ct = 0
+        for j in range(len(nums)-1):
+            if nums[j]<val:
+                ct += 1
+                i += 1
+                nums[j],nums[i] = nums[i],nums[j]
+        i += 1
+        nums[-1],nums[i] = nums[i],nums[-1]
+        if ct == target:
+            return nums
+        elif ct>target:
+            return self.Mid(nums[:ct],target) + nums[ct:]
+        else:
+            return nums[:ct] + self.Mid(nums[ct:],target-ct)
 
-        sorted_edges = sorted(self.weight,key=lambda x:self.weight[x])
+        # return ct,nums
+
+        # sorted_edges = sorted(self.weight,key=lambda x:self.weight[x])
 if __name__ == '__main__':
     # # Heap Part for Dijkstra
     # a = MBP()
@@ -149,58 +171,72 @@ if __name__ == '__main__':
 
 
 
-    # test Kruscal
+    # # test Kruscal
 
-    a = MBP()
-    print(a.g)
-    G1 = nx.Graph()
-    for e in a.g:
-        G1.add_edge(e[0],e[1],weight=a.weight[tuple(e)])
-    edges = G1.edges()
-    pos = nx.spring_layout(G1)
-    weights = [G1[u][v]['weight']/8 for u,v in edges]
-    with open('pos.pickle', 'wb') as f:  # Python 3: open(..., 'wb')
-        pickle.dump([edges,pos,weights,G1], f)
-    f.close()
-
-
-    # This part works fine for Heap MBP Dijkstra
-
-
-    # with open('pos.pickle', 'rb') as f:  # Python 3: open(..., 'wb')
-    #     edges,pos,weights,G1 = pickle.load(f)
+    # a = MBP()
+    # print(a.g)
+    # G1 = nx.Graph()
+    # for e in a.g:
+    #     G1.add_edge(e[0],e[1],weight=a.weight[tuple(e)])
+    # edges = G1.edges()
+    # pos = nx.spring_layout(G1)
+    # weights = [G1[u][v]['weight']/8 for u,v in edges]
+    # with open('pos.pickle', 'wb') as f:  # Python 3: open(..., 'wb')
+    #     pickle.dump([edges,pos,weights,G1], f)
     # f.close()
-    # mbp,v = a.mbp_heap(min(a.graph.keys()),max(a.graph.keys()))
-    # for __pair__ in range(5):
-    start,end = random.sample(a.graph.keys(),2)
-    # paths = a.mbp_heap(5)
-    # print(mbp,v)
-    # for r in range(len(paths)):
+
+
+    # # This part works fine for Heap MBP Dijkstra
+
+
+    # # with open('pos.pickle', 'rb') as f:  # Python 3: open(..., 'wb')
+    # #     edges,pos,weights,G1 = pickle.load(f)
+    # # f.close()
+    # # mbp,v = a.mbp_heap(min(a.graph.keys()),max(a.graph.keys()))
+    # # for __pair__ in range(5):
+    # start,end = random.sample(a.graph.keys(),2)
+    # # paths = a.mbp_heap(5)
+    # # print(mbp,v)
+    # # for r in range(len(paths)):
     
-    mbp,v = a.kruscal(start,end)
-    mbp_edges = []
-    for i in range(len(mbp)-1):
-        mbp_edges.append([mbp[i],mbp[i+1]])
-    G2 = nx.Graph()
-    for e in mbp_edges:
-        G2.add_edge(e[0],e[1],weight=a.weight[tuple(e)])
-    edges2 = G2.edges()
-    G3 = nx.Graph()
-    G3.add_node(start)
-    G3.add_node(end)
-    # pos2 = nx.spring_layout(G2)
-     # edge_color=weights,
-    nx.draw(G1,pos, node_color = 'g',node_size = 5,edges=edges, edge_color='black', width=weights,edge_cmap=plt.cm.Blues)
-    nx.draw(G3,pos, node_color = 'r',node_size = 10)
-    plt.savefig('mbp_total' + str(__counter__) + '.png')
-    # plt.show()
-    # plt.close()
-    # nx.draw(G1,pos, node_color = 'g',node_size = 5,edges=edges, edge_color=weights, width=weights,edge_cmap=plt.cm.Blues)
-    nx.draw(G2,pos, node_color = 'r',node_size = 5,edges=edges2, edge_color='r', width=3.0)
+    # mbp,v = a.kruscal(start,end)
+    # mbp_edges = []
+    # for i in range(len(mbp)-1):
+    #     mbp_edges.append([mbp[i],mbp[i+1]])
+    # G2 = nx.Graph()
+    # for e in mbp_edges:
+    #     G2.add_edge(e[0],e[1],weight=a.weight[tuple(e)])
+    # edges2 = G2.edges()
+    # G3 = nx.Graph()
+    # G3.add_node(start)
+    # G3.add_node(end)
+    # # pos2 = nx.spring_layout(G2)
+    #  # edge_color=weights,
+    # nx.draw(G1,pos, node_color = 'g',node_size = 5,edges=edges, edge_color='black', width=weights,edge_cmap=plt.cm.Blues)
     # nx.draw(G3,pos, node_color = 'r',node_size = 10)
-    plt.savefig('mbp_path' + str(__counter__) + '.png')
-    # plt.show()
-    plt.clf()
-    a = []
-        # plt.show()
-        # plt.close()
+    # plt.savefig('mbp_total' + str(__counter__) + '.png')
+    # # plt.show()
+    # # plt.close()
+    # # nx.draw(G1,pos, node_color = 'g',node_size = 5,edges=edges, edge_color=weights, width=weights,edge_cmap=plt.cm.Blues)
+    # nx.draw(G2,pos, node_color = 'r',node_size = 5,edges=edges2, edge_color='r', width=3.0)
+    # # nx.draw(G3,pos, node_color = 'r',node_size = 10)
+    # plt.savefig('mbp_path' + str(__counter__) + '.png')
+    # # plt.show()
+    # plt.clf()
+    # a = []
+    #     # plt.show()
+    #     # plt.close()
+
+
+
+    # test linear algorithm to find medians
+    a = MBP()
+    res = []
+    for i in range(1000):
+        l = random.sample(list(range(150)),int(149*random.random())+1)
+        # print(l)
+        mid = sorted(l)[len(l)//2]
+        b = a.Mid(l,len(l)//2)
+        # c = dir(b)
+        res.append(b[len(l)//2]!=mid)
+    print(any(res))

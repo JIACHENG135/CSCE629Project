@@ -110,7 +110,7 @@ if __name__ == '__main__':
 
 
     # gene picture for heap_mbp
-    a = Solution(60)
+    a = Solution(10)
     b = a.gene_graph_sparse()
     a.save()
 
